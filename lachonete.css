@@ -159,6 +159,7 @@ footer p {
   .imagens div {
     flex-direction: row; /* Muda de coluna para linha */
     justify-content: center;
+    align-items:center;
   }
 
   footer p {
