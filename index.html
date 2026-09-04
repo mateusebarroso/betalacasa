@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="pt-br" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>La Casa Hamburgueria</title>
+
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Ubuntu:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome para ícones -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Tailwind CSS (Framework de estilos) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Configuração customizada do Tailwind -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              title: ["Oswald", "sans-serif"],
+              body: ["Ubuntu", "sans-serif"],
+            },
+            colors: {
+              "lacasa-red": "#dc2626",
+              "lacasa-dark": "#0a0a0a",
+              "lacasa-gray": "#1c1c1c",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- CSS Customizado para detalhes finos (scrollbar e animações extras) -->
+    <style>
+      body {
+        background-color: #0a0a0a;
+        color: #ffffff;
+        font-family: "Ubuntu", sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* Personalizando a barra de rolagem */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1c1c1c;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #dc2626;
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #b91c1c;
+      }
+
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .bg-overlay {
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 10, 10, 0.3) 0%,
+          rgba(10, 10, 10, 1) 100%
+        );
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <nav
+      class="fixed w-full z-50 bg-lacasa-dark/90 backdrop-blur-md border-b border-white/10 transition-all duration-300"
+      id="navbar"
+    >
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <!-- Logo -->
+          <div
+            class="flex-shrink-0 flex items-center cursor-pointer"
+            onclick="window.scrollTo(0, 0)"
+          >
+            <div
+              class="text-2xl font-title font-bold tracking-wider flex items-center gap-2"
+            >
+              <i class="fa-solid fa-burger text-lacasa-red"></i>
+              LA CASA
+            </div>
+          </div>
+
+          <!-- Links Desktop -->
+          <div class="hidden md:flex space-x-8 items-center font-title text-lg">
+            <a href="#cardapio" class="hover:text-lacasa-red transition"
+              >Cardápio</a
+            >
+            <a href="#sobre" class="hover:text-lacasa-red transition"
+              >Sobre Nós</a
+            >
+            <a href="#localizacao" class="hover:text-lacasa-red transition"
+              >Localização</a
+            >
+          </div>
+
+          <!-- Botão do Carrinho -->
+          <div class="flex items-center">
+            <button
+              onclick="toggleCart()"
+              class="relative p-2 hover:text-lacasa-red transition group"
+            >
+              <i class="fa-solid fa-cart-shopping text-2xl"></i>
+              <!-- Badge de quantidade -->
+              <span
+                id="cart-count"
+                class="absolute top-0 right-0 -mt-1 -mr-1 bg-lacasa-red text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center transform scale-0 transition-transform group-hover:scale-110"
+                >0</span
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <header
+      class="relative h-screen flex items-center justify-center overflow-hidden"
+    >
+      <!-- Fundo com a máscara do Dalí/Aviso (foto7) e overlay escuro -->
+      <div class="absolute inset-0 z-0">
+        <img
+          src="foto8.webp"
+          alt="Fundo La Casa"
+          class="w-full h-full object-cover opacity-50"
+        />
+        <div class="absolute inset-0 bg-overlay"></div>
+      </div>
+
+      <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
+        <span
+          class="text-lacasa-red font-title font-bold tracking-widest uppercase text-sm md:text-base mb-4 block"
+          >O sabor que conquistou Monte Alegre</span
+        >
+        <h1
+          class="font-title text-5xl md:text-7xl font-bold mb-6 text-shadow uppercase"
+          style="min-height: 80px"
+        >
+          <span
+            id="typewriter"
+            class="border-r-4 border-lacasa-red pr-1"
+          ></span>
+        </h1>
+        <p
+          class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto text-shadow"
+        >
+          Uma grande fome exige um grande hambúrguer. Carne 100% bovina,
+          ingredientes frescos e aquele toque de mestre.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#cardapio"
+            class="bg-lacasa-red hover:bg-red-700 text-white font-title font-bold text-xl py-4 px-8 rounded-full transition shadow-lg shadow-red-500/30"
+          >
+            FAZER PEDIDO AGORA
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <section class="py-12 bg-lacasa-red text-white relative">
+      <div class="max-w-6xl mx-auto px-4">
+        <div
+          class="flex flex-col md:flex-row items-center justify-between gap-8"
+        >
+          <div class="md:w-1/2 text-center md:text-left">
+            <h2
+              class="font-title text-3xl md:text-5xl font-bold mb-4 uppercase"
+            >
+              Promoção da Semana!
+            </h2>
+            <p class="text-lg mb-6">
+              3 Dog Pinscher com ingredientes selecionados por um preço
+              imbatível. A lanchonete tá ON!
+            </p>
+            <button
+              onclick="addToCart('Promoção 3 Dog Pinscher', 15.0, 'foto4.webp')"
+              class="bg-lacasa-dark hover:bg-black text-white font-bold py-3 px-6 rounded-lg transition flex items-center gap-2 mx-auto md:mx-0"
+            >
+              <i class="fa-solid fa-plus"></i> Adicionar ao Carrinho - R$ 15,00
+            </button>
+          </div>
+          <div class="md:w-1/2 flex justify-center">
+            <img
+              src="foto4.webp"
+              alt="Promoção 3 Dog"
+              class="max-w-full h-auto rounded-xl shadow-2xl transform hover:scale-105 transition duration-500"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main id="cardapio" class="py-20 bg-lacasa-dark">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2
+            class="font-title text-4xl md:text-5xl font-bold text-white mb-4 uppercase"
+          >
+            Nosso Cardápio
+          </h2>
+          <div class="h-1 w-24 bg-lacasa-red mx-auto rounded"></div>
+          <p class="text-gray-400 mt-4">
+            Escolha seu lanche favorito e adicione ao carrinho
+          </p>
+        </div>
+
+        <!-- Grid de Produtos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Produto 1 -->
+          <div
+            class="bg-lacasa-gray rounded-2xl overflow-hidden border border-white/5 hover:border-lacasa-red/50 transition duration-300 group shadow-lg"
+          >
+            <div class="h-64 overflow-hidden relative">
+              <img
+                src="foto3.webp"
+                alt="Hambúrgueres Especiais"
+                class="w-full h-full object-cover object-center group-hover:scale-110 transition duration-500"
+              />
+              <div
+                class="absolute top-4 right-4 bg-lacasa-red text-white text-xs font-bold px-3 py-1 rounded-full uppercase"
+              >
+                Mais Vendido
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="font-title text-2xl font-bold mb-2">
+                Duplo "Casa de Papel"
+              </h3>
+              <p class="text-gray-400 text-sm mb-4 h-10">
+                Dois suculentos hambúrgueres artesanais, muito queijo e molho
+                especial.
+              </p>
+              <div class="flex justify-between items-center mt-4">
+                <span class="text-xl font-bold text-lacasa-red">R$ 38,00</span>
+                <button
+                  onclick="addToCart('Duplo Casa de Papel', 38.0, 'foto3.webp')"
+                  class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition"
+                  title="Adicionar ao carrinho"
+                >
+                  <i class="fa-solid fa-cart-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Produto 2 -->
+          <div
+            class="bg-lacasa-gray rounded-2xl overflow-hidden border border-white/5 hover:border-lacasa-red/50 transition duration-300 group shadow-lg"
+          >
+            <div class="h-64 overflow-hidden">
+              <img
+                src="foto2.webp"
+                alt="Hot Dog com Linguiça"
+                class="w-full h-full object-cover object-center group-hover:scale-110 transition duration-500"
+              />
+            </div>
+            <div class="p-6">
+              <h3 class="font-title text-2xl font-bold mb-2">
+                Hot Dog Especial
+              </h3>
+              <p class="text-gray-400 text-sm mb-4 h-10">
+                Com linguiça selecionada, batata palha crocante e molhos da
+                casa.
+              </p>
+              <div class="flex justify-between items-center mt-4">
+                <span class="text-xl font-bold text-lacasa-red">R$ 18,00</span>
+                <button
+                  onclick="addToCart('Hot Dog Especial', 18.0, 'foto2.webp')"
+                  class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition"
+                  title="Adicionar ao carrinho"
+                >
+                  <i class="fa-solid fa-cart-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Produto 3 -->
+          <div
+            class="bg-lacasa-gray rounded-2xl overflow-hidden border border-white/5 hover:border-lacasa-red/50 transition duration-300 group shadow-lg"
+          >
+            <div class="h-64 overflow-hidden">
+              <img
+                src="foto1.webp"
+                alt="Combo Misto"
+                class="w-full h-full object-cover object-center group-hover:scale-110 transition duration-500"
+              />
+            </div>
+            <div class="p-6">
+              <h3 class="font-title text-2xl font-bold mb-2">
+                Combo Professor
+              </h3>
+              <p class="text-gray-400 text-sm mb-4 h-10">
+                Na dúvida, leve os dois! 1 Hot dog tradicional + 1 Hambúrguer
+                clássico.
+              </p>
+              <div class="flex justify-between items-center mt-4">
+                <span class="text-xl font-bold text-lacasa-red">R$ 32,00</span>
+                <button
+                  onclick="addToCart('Combo Professor', 32.0, 'foto1.webp')"
+                  class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition"
+                  title="Adicionar ao carrinho"
+                >
+                  <i class="fa-solid fa-cart-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <section id="sobre" class="py-20 relative bg-[#111]">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="flex flex-col lg:flex-row items-center gap-12">
+          <!-- Imagem Monte Alegre -->
+          <div class="lg:w-1/2 w-full relative">
+            <img
+              src="foto5.webp"
+              alt="Monte Alegre"
+              class="w-full rounded-2xl shadow-2xl relative z-10 border-4 border-lacasa-gray"
+            />
+            <div
+              class="absolute -bottom-6 -right-6 w-full h-full bg-lacasa-red rounded-2xl z-0 hidden md:block"
+            ></div>
+          </div>
+
+          <!-- Texto -->
+          <div class="lg:w-1/2 w-full">
+            <h2
+              class="font-title text-3xl md:text-5xl font-bold mb-6 uppercase"
+            >
+              Orgulho de <span class="text-lacasa-red">Monte Alegre</span>
+            </h2>
+            <p class="text-gray-300 text-lg mb-6 leading-relaxed">
+              Nascemos aqui e fazemos nossos hambúrgueres com o amor que a nossa
+              terrinha merece. A **La Casa Hamburgueria** é mais do que um
+              delivery, é um pedaço da cultura local com o sabor que você já
+              conhece e confia.
+            </p>
+            <ul class="space-y-4 text-gray-400">
+              <li class="flex items-center gap-3">
+                <i class="fa-solid fa-check text-lacasa-red text-xl"></i> Carne
+                100% Bovina
+              </li>
+              <li class="flex items-center gap-3">
+                <i class="fa-solid fa-check text-lacasa-red text-xl"></i> Pães
+                sempre fresquinhos
+              </li>
+              <li class="flex items-center gap-3">
+                <i class="fa-solid fa-check text-lacasa-red text-xl"></i>
+                Atendimento todos os dias das 19h às 23h
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banner Tá ON -->
+    <div
+      class="w-full bg-zinc-900 border-y border-white/10 overflow-hidden py-10 flex justify-center"
+    >
+      <img
+        src="foto6.webp"
+        alt="La Casa Tá ON"
+        class="max-h-64 object-contain rounded-xl shadow-lg hover:scale-105 transition duration-300"
+      />
+    </div>
+
+    <!-- Localização e Mapa -->
+    <section id="localizacao" class="py-20 bg-lacasa-dark">
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <h2 class="font-title text-4xl font-bold mb-10 uppercase">
+          Onde Estamos
+        </h2>
+        <div
+          class="rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+        >
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.383357761113!2d-54.07345292613201!3d-2.0018397368245333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x928f5530789fb2e7%3A0x4f33292c8080df97!2sLa%20casa%20hamburgueria!5e0!3m2!1spt-BR!2sbr!4v1788557911773!5m2!1spt-BR!2sbr"
+            width="100%"
+            height="450"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-black pt-16 pb-8 border-t border-white/10">
+      <div
+        class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left mb-12"
+      >
+        <div>
+          <h3
+            class="font-title text-2xl font-bold text-white mb-4 flex items-center justify-center md:justify-start gap-2"
+          >
+            <i class="fa-solid fa-burger text-lacasa-red"></i> LA CASA
+          </h3>
+          <p class="text-gray-400">
+            Faça seu pedido que levamos até você. Os melhores lanches
+            fresquinhos pra matar sua fome!
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-title text-xl font-bold text-white mb-4">
+            Contato & Delivery
+          </h3>
+          <p class="text-gray-400 mb-2">
+            <i class="fa-solid fa-phone text-lacasa-red mr-2"></i> (93)
+            99235-0756
+          </p>
+          <p class="text-gray-400 mb-2">
+            <i class="fa-solid fa-clock text-lacasa-red mr-2"></i> Todos os
+            dias: 19h às 23h
+          </p>
+          <p class="text-gray-400">
+            <i class="fa-solid fa-money-bill-wave text-lacasa-red mr-2"></i>
+            Aceitamos Cartões e Pix
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-title text-xl font-bold text-white mb-4">
+            Redes Sociais
+          </h3>
+          <div class="flex justify-center md:justify-start space-x-4">
+            <a
+              href="https://www.instagram.com/la_casa_hamburgueria13/"
+              target="_blank"
+              class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-lacasa-red hover:text-white transition"
+            >
+              <i class="fa-brands fa-instagram text-xl"></i>
+            </a>
+            <a
+              href="https://wa.me/5593992350756"
+              target="_blank"
+              class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-500 hover:text-white transition"
+            >
+              <i class="fa-brands fa-whatsapp text-xl"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-center border-t border-white/10 pt-8 text-gray-500 text-sm"
+      >
+        &copy; 2026 La Casa Hamburgueria. Todos os direitos reservados.
+      </div>
+    </footer>
+
+    <!-- OVERLAY ESCURO DO CARRINHO -->
+    <div
+      id="cart-overlay"
+      class="fixed inset-0 bg-black/70 z-[60] hidden transition-opacity opacity-0 backdrop-blur-sm"
+      onclick="toggleCart()"
+    ></div>
+
+    <!-- PAINEL LATERAL DO CARRINHO -->
+    <div
+      id="cart-panel"
+      class="fixed top-0 right-0 h-full w-full sm:w-96 bg-lacasa-gray shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 flex flex-col border-l border-white/10"
+    >
+      <!-- Header do Carrinho -->
+      <div
+        class="p-6 border-b border-white/10 flex justify-between items-center bg-black"
+      >
+        <h3 class="font-title text-2xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-cart-arrow-down text-lacasa-red"></i> Seu Pedido
+        </h3>
+        <button
+          onclick="toggleCart()"
+          class="text-gray-400 hover:text-white text-2xl transition"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Lista de Itens -->
+      <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <!-- Os itens serão injetados via JavaScript aqui -->
+        <div class="text-center text-gray-500 mt-10" id="empty-cart-msg">
+          <i class="fa-solid fa-basket-shopping text-5xl mb-4 opacity-30"></i>
+          <p>Seu carrinho está vazio.</p>
+          <button onclick="toggleCart()" class="text-lacasa-red mt-2 underline">
+            Ver cardápio
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer do Carrinho (Total e Botão WhatsApp) -->
+      <div class="p-6 border-t border-white/10 bg-black">
+        <div class="flex justify-between items-center mb-6">
+          <span class="text-gray-300 text-lg">Total:</span>
+          <span id="cart-total" class="text-2xl font-bold font-title text-white"
+            >R$ 0,00</span
+          >
+        </div>
+
+        <button
+          onclick="enviarPedidoWhatsApp()"
+          id="btn-finalizar"
+          class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg shadow-green-900/50 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled
+        >
+          <i class="fa-brands fa-whatsapp text-xl"></i>
+          FINALIZAR NO WHATSAPP
+        </button>
+      </div>
+    </div>
+
+    <!-- Notificação Flutuante (Toast) -->
+    <div
+      id="toast"
+      class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-lacasa-red text-white px-6 py-3 rounded-full shadow-lg z-[100] transition-all duration-300 translate-y-20 opacity-0 flex items-center gap-2 font-bold pointer-events-none"
+    >
+      <i class="fa-solid fa-check-circle"></i> Adicionado ao carrinho!
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>
