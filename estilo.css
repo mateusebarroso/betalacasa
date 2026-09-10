@@ -90,7 +90,7 @@ strong {
   }
   .toggle {
     position: absolute;
-    left: 360px;
+    left:0px;
   }
 
   #cart-items {
