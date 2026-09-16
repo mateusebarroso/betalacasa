@@ -49,7 +49,7 @@ const btnFinalizar = document.getElementById("btn-finalizar");
 function addToCart(nome, preco, imagem) {
   // Verifica se já tem no carrinho, se tiver, só soma a quantidade
 
-  const itemExistente = carrinho.find((item) => item.nome === nome);
+  const itemExistente = carrinho.includes(nome)
 
   if (itemExistente) {
     itemExistente.quantidade += 1;
