@@ -358,4 +358,5 @@ function mostrarToast() {
   }, 2500);
 }
 
-carregarCarrinho();
+
+atualizarInterfaceCarrinho(nome)
