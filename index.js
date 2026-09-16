@@ -63,9 +63,10 @@ function addToCart(nome, preco, imagem) {
     carrinho.push({ nome, preco, imagem, quantidade: 1 });
   }
 
-  salvarCarrinho();
+
   atualizarInterfaceCarrinho(nome);
   mostrarToast();
+    salvarCarrinho();
 }
 
 // Aumentar/Diminuir quantidade
