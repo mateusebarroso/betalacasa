@@ -1,0 +1,161 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.branco {
+  padding: 10px;
+  background-color: white;
+  border-radius: 20px;
+  margin-top: 7px;
+}
+
+h2.vermelha {
+  font-size: 2.5em;
+  transition: all 500ms ease;
+  display: inline;
+}
+
+h2.vermelha:hover {
+  font-weight: bold;
+
+  background: linear-gradient(180deg, white 0%, #dc2626 50%, black 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#foto {
+  width: 15rem;
+  border-radius: 20px;
+}
+
+.espacamento {
+  letter-spacing: 3px;
+}
+
+.content-adicionais {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: row wrap;
+  gap: 30px;
+
+  width: 300px;
+  border-radius: 20px;
+  padding: 5px;
+}
+
+.item {
+  color: red;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  justify-content: center;
+  padding: 5px;
+}
+
+strong {
+  color: white;
+  font-size: 1em;
+}
+
+.sessao3 {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.tabela01 {
+  border: 2px solid white;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  width: 290px;
+  font-size: 0.77rem;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+}
+.tabela02 {
+  border: 2px solid white;
+  border-radius: 20px;
+
+  width: 385px;
+}
+#hotdog {
+  height: 550px;
+}
+
+.comida {
+  margin-bottom: 48px;
+}
+
+.sessao-hotdog {
+  margin-bottom: 48px;
+}
+
+.sessao-bebidas {
+  text-align: center;
+}
+
+.content-bedidas {
+  display: flex;
+
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  align-content: center;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.content-bedidas > div {
+  padding: 30px;
+  border: 2px solid white;
+  border-radius: 20px;
+}
+
+.content-bedidas > div h3 {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 375px) {
+  .menu-toggle {
+  }
+  h2.espacamento:hover {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .content-adicionais {
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    padding: 0;
+  }
+  .tabela01 {
+    padding: 0;
+    width: 320px;
+  }
+  .tabela02 {
+    padding: 0;
+    width: 320px;
+  }
+  .sessao3 {
+    text-align: left;
+  }
+
+  #cart-items {
+    width: 23.125rem;
+  }
+
+  #botaoZap {
+    width: 23.125rem;
+  }
+}
