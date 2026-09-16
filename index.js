@@ -49,13 +49,7 @@ const btnFinalizar = document.getElementById("btn-finalizar");
 function addToCart(nome, preco, imagem) {
   // Verifica se já tem no carrinho, se tiver, só soma a quantidade
 
-  const itemExistente = carrinho.find((item) => {
-    if (item.nome === nome) {
-      return nome;
-    } else {
-      return nome;
-    }
-  });
+  const itemExistente = carrinho.find((item) => item.nome === nome);
 
   if (itemExistente) {
     itemExistente.quantidade += 1;
@@ -63,10 +57,9 @@ function addToCart(nome, preco, imagem) {
     carrinho.push({ nome, preco, imagem, quantidade: 1 });
   }
 
-
   atualizarInterfaceCarrinho(nome);
+  salvarCarrinho();
   mostrarToast();
-    salvarCarrinho();
 }
 
 // Aumentar/Diminuir quantidade
@@ -160,7 +153,8 @@ function carregarCarrinho() {
   const carrinhoSalvo = localStorage.getItem("carrinho");
 
   if (carregarCarrinho) {
-    carrinho = JSON.parse(carrinhoSalvo);
+    carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    console.log(carrinho);
   }
 
   atualizarInterfaceCarrinho();
@@ -358,5 +352,4 @@ function mostrarToast() {
   }, 2500);
 }
 
-
-atualizarInterfaceCarrinho(nome)
+carregarCarrinho();
