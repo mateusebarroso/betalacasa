@@ -34,7 +34,7 @@ digitar();
 // --- 2. LÓGICA DO CARRINHO DE COMPRAS ---
 let carrinho = []; // Array que guarda os itens
 //const numeroWhatsApp = "5593992350756";
-const numeroWhatsApp = "5593992350756"; // Seu número configurado
+const numeroWhatsApp = "5593991293842"; // Seu número configurado
 
 // Elementos do DOM
 const cartPanel = document.getElementById("cart-panel");
@@ -306,31 +306,35 @@ function renderAdicionais() {
   cartItemsContainer.appendChild(corpoAdicionais);
 }
 
+const GEO_OPTS = {
+  enableHighAccuracy: true,
+  timeout: 15000, // 10s é curto em 3G/GPS frio
+  maximumAge: 60000, // aceita um fix de até 1 min, responde na hora
+};
+
 function pegarLocalizacao() {
   return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) {
-      reject("Seu navegador não suporta localização.");
+    if (!("geolocation" in navigator)) {
+      reject(new Error("Seu navegador não suporta localização."));
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
-      (posicao) => {
-        const latitude = posicao.coords.latitude;
-        const longitude = posicao.coords.longitude;
-
+      (pos) =>
         resolve({
-          latitude,
-          longitude,
-        });
-      },
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+          precisao: Math.round(pos.coords.accuracy), // em metros
+        }),
       (erro) => {
-        reject("Não foi possível obter sua localização.");
+        const msgs = {
+          1: "Você bloqueou o acesso à localização. Libere nas permissões do navegador ou informe o endereço na mensagem.",
+          2: "Não foi possível obter sua localização agora (sinal de GPS indisponível).",
+          3: "A localização demorou demais para responder.",
+        };
+        reject(new Error(msgs[erro.code] || "Erro ao obter localização."));
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      },
+      GEO_OPTS,
     );
   });
 }
@@ -338,47 +342,64 @@ function pegarLocalizacao() {
 async function enviarPedidoWhatsApp() {
   if (carrinho.length === 0) return;
 
-  let localizacao;
+  // feedback visual: o GPS pode levar alguns segundos
+  const textoOriginal = btnFinalizar.innerHTML;
+  btnFinalizar.disabled = true;
+  btnFinalizar.innerHTML = "Obtendo localização...";
 
+  let localizacao = null;
   try {
     localizacao = await pegarLocalizacao();
   } catch (erro) {
-    alert(erro);
-    return;
+    // não bloqueia o pedido: pergunta se quer seguir sem o mapa
+    const seguir = confirm(
+      `${erro.message}\n\nDeseja enviar o pedido sem a localização?`,
+    );
+    if (!seguir) {
+      btnFinalizar.disabled = false;
+      btnFinalizar.innerHTML = textoOriginal;
+      return;
+    }
   }
 
-  let textoPedido = "🍔 🍔 *NOVO PEDIDO - LA CASA HAMBURGUERIA* 🍔%0A%0A";
-
-  textoPedido += "*Itens do Pedido:*%0A";
-
+  // monta o texto com \n normal e codifica UMA vez no final
+  const linhas = [
+    "🍔 *NOVO PEDIDO - LA CASA HAMBURGUERIA* 🍔",
+    "",
+    "*Itens do Pedido:*",
+  ];
   let totalPedido = 0;
 
   carrinho.forEach((item) => {
-    let subtotal = item.quantidade * item.preco;
-
+    const subtotal = item.quantidade * item.preco;
     totalPedido += subtotal;
-
-    textoPedido += `➖ ${item.quantidade}x ${item.nome} - R$ ${subtotal
-      .toFixed(2)
-      .replace(".", ",")}%0A`;
+    linhas.push(
+      `➖ ${item.quantidade}x ${item.nome} - ${formatarBRL(subtotal)}`,
+    );
   });
 
-  textoPedido += `%0A*TOTAL: R$ ${totalPedido
-    .toFixed(2)
-    .replace(".", ",")}*%0A`;
+  linhas.push("", `*TOTAL: ${formatarBRL(totalPedido)}*`, "");
+  linhas.push("*Forma de pagamento:* (Informe aqui)");
+  linhas.push("*Endereço para entrega:* (Informe aqui)");
 
-  textoPedido += "%0A*Forma de pagamento:* (Informe aqui)%0A";
+  if (localizacao) {
+    linhas.push(
+      "",
+      "📍 *Localização do cliente:*",
+      `https://www.google.com/maps?q=${localizacao.latitude},${localizacao.longitude}`,
+      `(precisão aproximada: ${localizacao.precisao}m)`,
+    );
+  }
 
-  textoPedido += "*Endereço para entrega:* (Informe aqui)%0A";
-
-  // Link para a localização do cliente
-  const linkMaps = `https://www.google.com/maps?q=${localizacao.latitude},${localizacao.longitude}`;
-
-  textoPedido += `%0A📍 *Localização do cliente:*%0A${linkMaps}`;
-
-  const link = `https://wa.me/${numeroWhatsApp}?text=${textoPedido}`;
-
+  const link = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(linhas.join("\n"))}`;
   window.open(link, "_blank");
+
+  btnFinalizar.disabled = false;
+  btnFinalizar.innerHTML = textoOriginal;
+}
+
+function formatarBRL(valor) {
+  return `R$ ${valor.toFixed(2).replace(".", ",")}`;
 }
 /*Enviar pedido para o WhatsApp
 function enviarPedidoWhatsApp() {
