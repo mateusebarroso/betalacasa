@@ -49,7 +49,13 @@ const btnFinalizar = document.getElementById("btn-finalizar");
 function addToCart(nome, preco, imagem) {
   // Verifica se já tem no carrinho, se tiver, só soma a quantidade
 
-  const itemExistente = carrinho.find((item) => item.nome === nome);
+  const itemExistente = carrinho.find((item) => {
+    if (item.nome === nome) {
+      return nome;
+    } else {
+      return nome;
+    }
+  });
 
   if (itemExistente) {
     itemExistente.quantidade += 1;
@@ -57,8 +63,8 @@ function addToCart(nome, preco, imagem) {
     carrinho.push({ nome, preco, imagem, quantidade: 1 });
   }
 
-  atualizarInterfaceCarrinho(nome);
   salvarCarrinho();
+  atualizarInterfaceCarrinho(nome);
   mostrarToast();
 }
 
@@ -153,8 +159,7 @@ function carregarCarrinho() {
   const carrinhoSalvo = localStorage.getItem("carrinho");
 
   if (carregarCarrinho) {
-    carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-    console.log(carrinho);
+    carrinho = JSON.parse(carrinhoSalvo);
   }
 
   atualizarInterfaceCarrinho();
@@ -301,7 +306,81 @@ function renderAdicionais() {
   cartItemsContainer.appendChild(corpoAdicionais);
 }
 
-// Enviar pedido para o WhatsApp
+function pegarLocalizacao() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject("Seu navegador não suporta localização.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (posicao) => {
+        const latitude = posicao.coords.latitude;
+        const longitude = posicao.coords.longitude;
+
+        resolve({
+          latitude,
+          longitude,
+        });
+      },
+      (erro) => {
+        reject("Não foi possível obter sua localização.");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      },
+    );
+  });
+}
+
+async function enviarPedidoWhatsApp() {
+  if (carrinho.length === 0) return;
+
+  let localizacao;
+
+  try {
+    localizacao = await pegarLocalizacao();
+  } catch (erro) {
+    alert(erro);
+    return;
+  }
+
+  let textoPedido = "🍔 🍔 *NOVO PEDIDO - LA CASA HAMBURGUERIA* 🍔%0A%0A";
+
+  textoPedido += "*Itens do Pedido:*%0A";
+
+  let totalPedido = 0;
+
+  carrinho.forEach((item) => {
+    let subtotal = item.quantidade * item.preco;
+
+    totalPedido += subtotal;
+
+    textoPedido += `➖ ${item.quantidade}x ${item.nome} - R$ ${subtotal
+      .toFixed(2)
+      .replace(".", ",")}%0A`;
+  });
+
+  textoPedido += `%0A*TOTAL: R$ ${totalPedido
+    .toFixed(2)
+    .replace(".", ",")}*%0A`;
+
+  textoPedido += "%0A*Forma de pagamento:* (Informe aqui)%0A";
+
+  textoPedido += "*Endereço para entrega:* (Informe aqui)%0A";
+
+  // Link para a localização do cliente
+  const linkMaps = `https://www.google.com/maps?q=${localizacao.latitude},${localizacao.longitude}`;
+
+  textoPedido += `%0A📍 *Localização do cliente:*%0A${linkMaps}`;
+
+  const link = `https://wa.me/${numeroWhatsApp}?text=${textoPedido}`;
+
+  window.open(link, "_blank");
+}
+/*Enviar pedido para o WhatsApp
 function enviarPedidoWhatsApp() {
   if (carrinho.length === 0) return;
 
@@ -328,6 +407,7 @@ function enviarPedidoWhatsApp() {
   // Opcional: Esvaziar carrinho após enviar
   // carrinho = []; atualizarInterfaceCarrinho(); toggleCart();
 }
+*/
 
 // Abrir/Fechar painel lateral
 function toggleCart() {
