@@ -68,6 +68,9 @@ strong {
   justify-content: center;
   align-items: center;
 }
+.show1 {
+  display: none;
+}
 
 .tabela01 {
   border: 2px solid white;
