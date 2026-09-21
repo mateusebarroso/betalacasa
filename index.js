@@ -44,18 +44,42 @@ const emptyCartMsg = document.getElementById("empty-cart-msg");
 const cartTotalEl = document.getElementById("cart-total");
 const cartCountEl = document.getElementById("cart-count");
 const btnFinalizar = document.getElementById("btn-finalizar");
+const sessao3 = document.querySelector(".sessao3");
+let lacheTrue = [
+  "MOSCOU",
+  "BERLIN",
+  "DENVER",
+  "RIO",
+  "LISBOA",
+  "NAIROBI",
+  "OSLO",
+  "HELSINKI",
+  "TÓKIO",
+  "PROFESSOR",
+];
+let adicionais = [
+  "Ovo",
+  "Calabresa",
+  "Cebola Caramelizada",
+  "Salsicha",
+  "Cheddar",
+  "Banana",
+  "Catupiry",
+  "Presunto",
+  " Molho Barbercue",
+  "Queijo Coalho",
+  " Molho da Casa ",
+  " Bacon ",
+  "Mussarela",
+  "Carne",
+  "Filé",
+];
 //console.log(cartItemsContainer);
 // Adicionar item
 function addToCart(nome, preco, imagem) {
   // Verifica se já tem no carrinho, se tiver, só soma a quantidade
 
-  const itemExistente = carrinho.find((item) => {
-    if (item.nome === nome) {
-      return nome;
-    } else {
-      return nome;
-    }
-  });
+  const itemExistente = carrinho.find((item) => item.nome === nome);
 
   if (itemExistente) {
     itemExistente.quantidade += 1;
@@ -67,7 +91,6 @@ function addToCart(nome, preco, imagem) {
   atualizarInterfaceCarrinho(nome);
   mostrarToast();
 }
-
 // Aumentar/Diminuir quantidade
 function alterarQuantidade(index, operacao) {
   if (operacao === "+") {
@@ -83,7 +106,7 @@ function alterarQuantidade(index, operacao) {
 }
 
 // Atualizar Tela
-function atualizarInterfaceCarrinho(nome) {
+function atualizarInterfaceCarrinho() {
   cartItemsContainer.innerHTML = ""; // Limpa a lista
   let total = 0;
   let qtdTotal = 0;
@@ -124,27 +147,21 @@ function atualizarInterfaceCarrinho(nome) {
                 `;
 
     cartItemsContainer.appendChild(div);
+    cartItemsContainer.appendChild(sessao3);
+    let show = document.querySelector(".show1");
+    let temLanhe = lacheTrue.includes(item.nome);
+    let temAdicinais = adicionais.includes(item.nome);
+    if (temLanhe) {
+      show.style.display = "block";
+      cartItemsContainer.appendChild(sessao3);
+    } else if (temAdicinais) {
+      show.style.display = "block";
+    } else if (!temLanhe) {
+      show.style.display = "none";
+    }
   });
-  let lacheTrue = [
-    "MOSCOU",
-    "BERLIN",
-    "DENVER",
-    "RIO",
-    "LISBOA",
-    "NAIROBI",
-    "OSLO",
-    "HELSINKI",
-    "TÓKIO",
-    "PROFESSOR",
-  ];
-  let sessao3 = document.querySelector(".sessao3");
-  let temLanche = lacheTrue.includes(nome);
 
-  if (temLanche === true) {
-    renderAdicionais();
-  } else {
-    sessao3.style.display = "none";
-  }
+  //let temLanche = lacheTrue.includes(nome);
 
   // Atualiza totais
   cartTotalEl.innerText = `R$ ${total.toFixed(2).replace(".", ",")}`;
@@ -165,146 +182,6 @@ function carregarCarrinho() {
   atualizarInterfaceCarrinho();
 }
 // aqui estou criando uma função para renderizar o menu
-
-function renderAdicionais() {
-  let corpoAdicionais = document.createElement("div");
-  corpoAdicionais.innerHTML = `<section class="sessao3">
-              <div class="max-w-6xl mx-auto px-4">
-    
-          <div class="text-center mb-8 sessao2">
-
-
-            <h2
-              class="font-title text-2xl md:text-1xl font-bold text-white mb-4 uppercase"
-            >
-              Nosso Cardápio
-            </h2>
-            <h2 class="font-title cinquenta font-bold text-white mb-4 uppercase vermelha espacamento">ADICIONAIS</h2>
-          
-            <div class="h-1 w-24 bg-lacasa-red mx-auto rounded"></div>
-            
-          </div>
-          </div>
-    
-          <div class="content-adicionais">
-            <div class="tabela01">
-                <div class="item">OVO.............................................<strong>RS 2,00</strong> 
-                        <button
-                    onclick="addToCart('Ovo', 2.0, 'ovo-frito.png')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button>
-                </div>
-            <div class="item">CALABRESA.............................<strong>RS 3,00</strong>     <button
-                    onclick="addToCart('Calabresa', 3.0, 'calabressa.jpg')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            <div class="item">CEBOLA CARAMELIZADA........ <strong>RS 3,00</strong>     <button
-                    onclick="addToCart('Cebola Caramelizada', 3.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            <div class="item">SALSICHA.......................................<strong>RS 2,00</strong>     <button
-                    onclick="addToCart('Salsicha', 2.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            <div class="item">CHEDDAR.......................................<strong>RS 3,00</strong>     <button
-                    onclick="addToCart('Cheddar', 3.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            <div class="item">BANANA.......................................<strong>RS 2,00</strong>     <button
-                    onclick="addToCart('Banana', 2.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-          
-            <div class="item">MOLHO BARBERCUE..................<strong>RS 3,00</strong>     <button
-                    onclick="addToCart('Molho Barbercue', 3.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            </div>
-            <div class="tabela01">
-              <div class="item">CATUPIRY.......................................<strong>RS 3,00</strong> <button
-                    onclick="addToCart('Catupiry', 3.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            <div class="item">PRESUNTO.......................................<strong>RS 2,00</strong> <button
-                    onclick="addToCart(' Presunto', 2.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            <div class="item">QUEIJO COALHO.......................................<strong>RS 3,00</strong><button
-                    onclick="addToCart(' Queijo Coalho', 3.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button> </div>
-            <div class="item">MOLHO DA CASA.......................................<strong>RS 3,00</strong> <button
-                    onclick="addToCart('Molho da Casa', 3.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            <div class="item">BACON.......................................<strong>RS 3,00</strong><button
-                    onclick="addToCart(' Bacon', 3.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button> </div> 
-            <div class="item">MUSSARELA.......................................<strong>RS 3,00</strong> <button
-                    onclick="addToCart('Mussarela', 3.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            <div class="item">CARNE.......................................<strong>RS 4,00</strong><button
-                    onclick="addToCart('Carne', 4.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button> </div>
-            <div class="item">FILÉ.......................................<strong>RS 5,00</strong> <button
-                    onclick="addToCart('Filé', 5.0, 'foto11.webp')"
-                    class="bg-white/10 hover:bg-lacasa-red text-white p-3 rounded-full transition show"
-                    title="Adicionar ao carrinho"
-                  >
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </button></div>
-            </div>
-          
-          </div>
-
-          </section>`;
-  cartItemsContainer.appendChild(corpoAdicionais);
-}
 
 const GEO_OPTS = {
   enableHighAccuracy: true,
