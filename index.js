@@ -45,6 +45,7 @@ const cartTotalEl = document.getElementById("cart-total");
 const cartCountEl = document.getElementById("cart-count");
 const btnFinalizar = document.getElementById("btn-finalizar");
 const sessao3 = document.querySelector(".sessao3");
+    let show = document.querySelector(".show1");
 let lacheTrue = [
   "MOSCOU",
   "BERLIN",
@@ -148,7 +149,7 @@ function atualizarInterfaceCarrinho() {
 
     cartItemsContainer.appendChild(div);
     cartItemsContainer.appendChild(sessao3);
-    let show = document.querySelector(".show1");
+
     let temLanhe = lacheTrue.includes(item.nome);
     let temAdicinais = adicionais.includes(item.nome);
     if (temLanhe) {
