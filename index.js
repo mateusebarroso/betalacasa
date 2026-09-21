@@ -45,7 +45,7 @@ const cartTotalEl = document.getElementById("cart-total");
 const cartCountEl = document.getElementById("cart-count");
 const btnFinalizar = document.getElementById("btn-finalizar");
 const sessao3 = document.querySelector(".sessao3");
-    let show = document.querySelector(".show1");
+const show = document.querySelector(".show1");
 let lacheTrue = [
   "MOSCOU",
   "BERLIN",
